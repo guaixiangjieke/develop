@@ -1,12 +1,12 @@
 package com.nl.develop.mvp;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +116,7 @@ public class MvpFragment<P extends MvpContract.IPresenter> extends Fragment impl
     }
 
 
-    private P presenter;
+    protected P presenter;
 
     @Override
     public P getPresenter() {
