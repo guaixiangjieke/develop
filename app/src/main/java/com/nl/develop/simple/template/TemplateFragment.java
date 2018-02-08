@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nl.develop.mvp.MvpFragment;
+import com.nl.develop.simple.R;
 
 /**
  * mvp模板 mvp view实现类
