@@ -5,11 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.nl.develop.mvp.MvpActivity;
 import com.nl.develop.simple.R;
-import com.nl.develop.widgets.pager.TabAdapter;
+import com.nl.develop.widgets.FragmentAdapter;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
  */
 
 public class TabActivity extends MvpActivity<Contract.IPresenter> implements Contract.IView {
-    private TabAdapter tabAdapter;
+    private FragmentPagerAdapter tabAdapter;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -42,7 +43,7 @@ public class TabActivity extends MvpActivity<Contract.IPresenter> implements Con
      */
     void setUpTab() {
         List<Fragment> pages = presenter.getPages();
-        tabAdapter = new TabAdapter(pages, getSupportFragmentManager());
+        tabAdapter = new FragmentAdapter(pages, getSupportFragmentManager());
         tabAdapter.registerDataSetObserver(pagerAdapterObserver);
         viewPager.setAdapter(tabAdapter);
         tabLayout.setupWithViewPager(viewPager);

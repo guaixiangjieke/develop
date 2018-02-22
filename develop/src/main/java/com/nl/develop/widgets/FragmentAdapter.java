@@ -1,4 +1,4 @@
-package com.nl.develop.widgets.pager;
+package com.nl.develop.widgets;
 
 
 import android.support.v4.app.Fragment;
