@@ -75,8 +75,12 @@ public class MvpActivity<P extends MvpContract.IPresenter> extends AppCompatActi
 
     @Override
     public void onBackPressed() {
-        if (presenter != null && presenter.onBackPressed()) {
+        if (presenter == null) {
             super.onBackPressed();
+        } else {
+            if (presenter.onBackPressed()) {
+                super.onBackPressed();
+            }
         }
     }
 
