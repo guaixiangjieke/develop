@@ -1,82 +1,83 @@
 package com.nl.develop.simple.boot;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.nl.develop.mvp.MvpActivity;
+import com.nl.develop.BootBaseActivity;
 import com.nl.develop.simple.R;
+import com.nl.develop.widgets.ViewPagerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 启动页面-引导页 mvp view实现类
+ * simple 默认0.8f  RadioGroup RadioButton实现
  */
 
-public class BootActivity extends MvpActivity<Contract.IPresenter> implements Contract.IView {
+public class BootActivity extends BootBaseActivity<Contract.IPresenter> implements Contract.IView {
 
-    private ViewPager bootPager;
-    private RadioGroup bootIndicator;
-    private PagerAdapter pagerAdapter;
+    private RadioGroup radioGroup;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_boot);
-        setUp();
+    protected float guidePercent() {
+        return 0.9f;
     }
 
     @Override
-    protected void onDestroy() {
-        if (bootPager != null) {
-            bootPager.removeOnPageChangeListener(onPageChangeListener);
+    protected PagerAdapter getPageAdapter() {
+        List<View> data = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(R.mipmap.ic_launcher);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            data.add(imageView);
         }
-        super.onDestroy();
+        return new ViewPagerAdapter(data);
     }
 
-    private void setUp() {
-        bootPager = findViewById(R.id.bootPager);
-        bootIndicator = findViewById(R.id.bootIndicator);
-        pagerAdapter = getPagerAdapter();
-        bootPager.setAdapter(pagerAdapter);
-        for (int i = 0; i < pagerAdapter.getCount(); i++) {
-            bootIndicator.addView(new RadioButton(this));
+    @Override
+    protected void onPageDataChanged(FrameLayout bootIndicatorContainer, PagerAdapter pagerAdapter) {
+        if (bootIndicatorContainer != null && pagerAdapter != null) {
+            int childCount = bootIndicatorContainer.getChildCount();
+            if (childCount > 0) {
+                bootIndicatorContainer.removeAllViews();
+            }
+            int count = pagerAdapter.getCount();
+            if (count > 0) {
+                radioGroup = new RadioGroup(this);
+                radioGroup.setOrientation(LinearLayout.HORIZONTAL);
+                radioGroup.setGravity(Gravity.CENTER);
+                for (int i = 0; i < count; i++) {
+                    radioGroup.addView(new RadioButton(this));
+                }
+                bootIndicatorContainer.addView(radioGroup);
+                radioGroup.check(radioGroup.getChildAt(0).getId());
+            }
+
         }
-        bootPager.addOnPageChangeListener(onPageChangeListener);
     }
 
-    /**
-     * 页面滑动监听 更新指示器
-     */
-    private final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
-        @Override
-        public void onPageSelected(int position) {
-            if (position >= 0 && position < bootIndicator.getChildCount()) {
-                View childAt = bootIndicator.getChildAt(position);
-                bootIndicator.check(childAt.getId());
-            }
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (radioGroup != null && position >= 0 && position < radioGroup.getChildCount()) {
+            radioGroup.check(radioGroup.getChildAt(position).getId());
         }
-    };
+    }
 
-    private PagerAdapter getPagerAdapter() {
-        return new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return 0;
-            }
+    @Override
+    public void onPageScrollStateChanged(int state) {
 
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return false;
-            }
-
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                return super.instantiateItem(container, position);
-            }
-        };
     }
 }
