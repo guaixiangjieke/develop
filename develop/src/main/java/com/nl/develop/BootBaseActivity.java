@@ -85,9 +85,9 @@ public abstract class BootBaseActivity<P extends MvpContract.IPresenter> extends
      * 获取适配器
      *
      * @return
-     * @see {@link PagerAdapter}
-     * @see {@link com.nl.develop.widgets.FragmentAdapter}
-     * @see {@link com.nl.develop.widgets.ViewPagerAdapter}
+     *{@link PagerAdapter}
+     *{@link com.nl.develop.widgets.FragmentAdapter}
+     *{@link com.nl.develop.widgets.ViewPagerAdapter}
      */
     protected abstract PagerAdapter getPageAdapter();
 
