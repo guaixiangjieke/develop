@@ -198,4 +198,24 @@ public class NetImpNative implements NetFactory {
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         return stringBuilder.toString();
     }
+
+    /**
+     * Created by NiuLei on 2018/2/23.
+     * 适配线程池取消
+     */
+
+    class RequestFutureAdapter implements IRequest {
+        private Future future;
+
+        RequestFutureAdapter(Future future) {
+            this.future = future;
+        }
+
+        @Override
+        public void cancel() {
+            if (future != null) {
+                future.cancel(true);
+            }
+        }
+    }
 }
