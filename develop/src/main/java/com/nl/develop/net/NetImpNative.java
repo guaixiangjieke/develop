@@ -3,6 +3,8 @@ package com.nl.develop.net;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
+import com.nl.develop.utils.HttpTools;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -120,7 +122,7 @@ public class NetImpNative implements NetFactory {
         String paramsPath = null;
         //根据请求参数生成url格式参数
         if (params != null && !params.isEmpty()) {
-            paramsPath = generatePath(params);
+            paramsPath = HttpTools.generatePath(params);
         }
         //如果是get请求 参数拼接到路径后面
         if (Method.GET.equals(method) && paramsPath != null) {
@@ -174,29 +176,6 @@ public class NetImpNative implements NetFactory {
             }
             netCallBack.onFinish();
         }
-    }
-
-    /**
-     * 根据参数生成路径
-     * rg : key1 value1
-     * key2 value2
-     * ?key1=value1&key2=value2
-     *
-     * @param params 集合类型请求参数
-     * @return 字符串类型请求参数
-     */
-    @NonNull
-    private String generatePath(ArrayMap<String, String> params) {
-        final int size = params.size();
-        final StringBuilder stringBuilder = new StringBuilder("?");
-        for (int i = 0; i < size; i++) {
-            stringBuilder.append(params.keyAt(i));
-            stringBuilder.append("=");
-            stringBuilder.append(params.valueAt(i));
-            stringBuilder.append("&");
-        }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        return stringBuilder.toString();
     }
 
     /**
