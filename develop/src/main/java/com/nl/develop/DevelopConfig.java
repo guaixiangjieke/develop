@@ -6,6 +6,7 @@ import com.nl.develop.json.JsonFactory;
 import com.nl.develop.json.JsonImpGson;
 import com.nl.develop.net.NetFactory;
 import com.nl.develop.net.NetImpOkHttp;
+import com.nl.develop.utils.CrashHandler;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -82,5 +83,15 @@ public class DevelopConfig {
 
     public void setDebug(boolean debug) {
         isDebug = debug;
+    }
+
+    /**
+     * 未捕获异常处理  统一打印
+     * see {@link CrashHandler}
+     *
+     * @return {@link Thread.UncaughtExceptionHandler}实现类
+     */
+    public CrashHandler newCrashHandler() {
+        return new CrashHandler();
     }
 }
