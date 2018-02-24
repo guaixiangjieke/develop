@@ -70,6 +70,7 @@ public class NetImpOkHttp implements NetFactory {
         Call call = okHttpClient.newCall(request);
         final OkHttpCallBackAdapter okHttpCallBackAdapter = new OkHttpCallBackAdapter(netCallBack);
         call.enqueue(okHttpCallBackAdapter);
+        okHttpCallBackAdapter.onStart();
         return new RequestCallAdapter(call);
     }
 

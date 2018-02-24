@@ -50,7 +50,11 @@ public class OkHttpCallBackAdapter implements NetCallBack, Callback {
 
     @Override
     public void onFailure(Call call, IOException e) {
-        onFailure(e);
+        try {
+            onFailure(e);
+        } finally {
+            onFinish();
+        }
     }
 
     @Override
@@ -60,6 +64,10 @@ public class OkHttpCallBackAdapter implements NetCallBack, Callback {
         if (body != null) {
             responseString = body.string();
         }
-        onResponse(responseString);
+        try {
+            onResponse(responseString);
+        } finally {
+            onFinish();
+        }
     }
 }
