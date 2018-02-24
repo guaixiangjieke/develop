@@ -12,8 +12,8 @@ import android.support.annotation.Nullable;
  */
 
 public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IView> implements MvpContract.IPresenter {
-    private M model;
-    private V view;
+    protected M model;
+    protected V view;
 
     public MvpPresenter(M model, V view) {
         this.model = model;
