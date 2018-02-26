@@ -3,9 +3,9 @@ package com.nl.develop.net;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.BuildConfig;
 import android.support.v4.util.ArrayMap;
 
+import com.nl.develop.BuildConfig;
 import com.nl.develop.utils.HttpTools;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class NetImpOkHttp implements NetFactory {
 
     public NetImpOkHttp() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if (BuildConfig.DEBUG) {//添加log 拦截器
+        if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(httpLoggingInterceptor);
@@ -77,7 +77,7 @@ public class NetImpOkHttp implements NetFactory {
     @NonNull
     private IRequest exe(@NonNull NetCallBack netCallBack, Request request) {
         Call call = okHttpClient.newCall(request);
-        final OkHttpCallBackAdapter okHttpCallBackAdapter = new OkHttpCallBackAdapter(NetCallBackHandler.newProxy(handler,netCallBack));
+        final OkHttpCallBackAdapter okHttpCallBackAdapter = new OkHttpCallBackAdapter(NetCallBackHandler.newProxy(handler, netCallBack));
         call.enqueue(okHttpCallBackAdapter);
         return new RequestCallAdapter(call);
     }
