@@ -1,5 +1,7 @@
 package com.nl.develop.net;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.BuildConfig;
 import android.support.v4.util.ArrayMap;
@@ -24,6 +26,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 public class NetImpOkHttp implements NetFactory {
     private final OkHttpClient okHttpClient;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
 
     public NetImpOkHttp() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -73,7 +77,7 @@ public class NetImpOkHttp implements NetFactory {
     @NonNull
     private IRequest exe(@NonNull NetCallBack netCallBack, Request request) {
         Call call = okHttpClient.newCall(request);
-        final OkHttpCallBackAdapter okHttpCallBackAdapter = new OkHttpCallBackAdapter(netCallBack);
+        final OkHttpCallBackAdapter okHttpCallBackAdapter = new OkHttpCallBackAdapter(NetCallBackHandler.newProxy(handler,netCallBack));
         call.enqueue(okHttpCallBackAdapter);
         return new RequestCallAdapter(call);
     }

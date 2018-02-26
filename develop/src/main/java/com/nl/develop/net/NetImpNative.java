@@ -1,5 +1,7 @@
 package com.nl.develop.net;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
@@ -26,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class NetImpNative implements NetFactory {
-
+    private final Handler handler = new Handler(Looper.getMainLooper());
     class Method {
         public static final String POST = "POST";
         public static final String GET = "GET";
@@ -99,7 +101,7 @@ public class NetImpNative implements NetFactory {
             final Future<?> submit = THREAD_POOL_EXECUTOR.submit(new Runnable() {
                 @Override
                 public void run() {
-                    request(url, method, params, netCallBack);
+                    request(url, method, params, NetCallBackHandler.newProxy(handler,netCallBack));
                 }
             });
             return new RequestFutureAdapter(submit);
