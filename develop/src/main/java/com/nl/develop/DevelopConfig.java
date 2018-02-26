@@ -13,7 +13,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by NiuLei on 2018/2/23.
  * 配置
+ * 
  */
+// TODO: 2018/2/24 1、logo收集开关配置 路径等等
 
 public class DevelopConfig {
     /**

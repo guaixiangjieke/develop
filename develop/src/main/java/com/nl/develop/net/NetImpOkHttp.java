@@ -6,10 +6,15 @@ import android.support.v4.util.ArrayMap;
 
 import com.nl.develop.utils.HttpTools;
 
+import java.io.IOException;
+
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
@@ -70,7 +75,6 @@ public class NetImpOkHttp implements NetFactory {
         Call call = okHttpClient.newCall(request);
         final OkHttpCallBackAdapter okHttpCallBackAdapter = new OkHttpCallBackAdapter(netCallBack);
         call.enqueue(okHttpCallBackAdapter);
-        okHttpCallBackAdapter.onStart();
         return new RequestCallAdapter(call);
     }
 
@@ -88,7 +92,7 @@ public class NetImpOkHttp implements NetFactory {
     /**
      * 适配okHttp网络请求取消
      */
-    class RequestCallAdapter implements IRequest {
+    final class RequestCallAdapter implements IRequest {
         private Call call;
 
         public RequestCallAdapter(Call call) {
@@ -99,6 +103,43 @@ public class NetImpOkHttp implements NetFactory {
         public void cancel() {
             if (call != null) {
                 call.cancel();
+            }
+        }
+    }
+
+    /**
+     * Created by NiuLei on 2018/2/23.
+     * 适配okHttp回调
+     */
+
+    final class OkHttpCallBackAdapter implements Callback {
+        private final NetCallBack netCallBack;
+
+        public OkHttpCallBackAdapter(@NonNull NetCallBack netCallBack) {
+            this.netCallBack = netCallBack;
+            this.netCallBack.onStart();
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            try {
+                netCallBack.onFailure(e);
+            } finally {
+                netCallBack.onFinish();
+            }
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            String responseString = null;
+            ResponseBody body = response.body();
+            if (body != null) {
+                responseString = body.string();
+            }
+            try {
+                netCallBack.onResponse(responseString);
+            } finally {
+                netCallBack.onFinish();
             }
         }
     }

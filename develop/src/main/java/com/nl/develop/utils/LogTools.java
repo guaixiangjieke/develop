@@ -40,4 +40,20 @@ public class LogTools {
                 break;
         }
     }
+
+    public static void i(String msg) {
+        log(Log.INFO, msg);
+    }
+
+    public static void d(String msg) {
+        log(Log.DEBUG, msg);
+    }
+
+    public static void w(String msg) {
+        log(Log.WARN, msg);
+    }
+
+    public static void e(String msg) {
+        log(Log.ERROR, msg);
+    }
 }
