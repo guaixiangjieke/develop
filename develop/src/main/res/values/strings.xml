@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Develop</string>
+    <string name="net_loading">网络加载中...</string>
 </resources>

@@ -7,6 +7,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.nl.develop.DevelopConfig;
+import com.nl.develop.R;
+import com.nl.develop.net.NetCallBack;
+
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 /**
  * Created by NiuLei on 2018/1/29.
  */
@@ -80,5 +88,79 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
             }
         }
         return null;
+    }
+
+    @Override
+    public void cancelRequest() {
+
+    }
+
+
+    /**
+     * 网络回调实现
+     */
+    protected class SimpleCallBack implements NetCallBack {
+
+        private int ingMsg;
+        private int successMsg;
+
+        public SimpleCallBack() {
+        }
+
+        public SimpleCallBack(int ingMsg, int successMsg) {
+            this.ingMsg = ingMsg;
+            this.successMsg = successMsg;
+        }
+
+
+        @Override
+        public void onStart() {
+            if (ingMsg > 0) {
+                view.startProgress(ingMsg);
+            } else {
+                view.startProgress(R.string.net_loading);
+            }
+        }
+
+        @Override
+        public void onFailure(IOException e) {
+            String message = e.getMessage();
+            if (message != null) {
+                if (message.toLowerCase().indexOf("Canceled".toLowerCase()) != -1) {
+                } else if (message.toLowerCase().indexOf("TimeOut".toLowerCase()) != -1) {
+                } else if (message.toLowerCase().indexOf("Socket closed".toLowerCase()) != -1) {
+                } else {
+                }
+            }
+        }
+
+        @Override
+        public void onResponse(String response) {
+            if (successMsg > 0) {
+                view.showToast(successMsg);
+            }
+        }
+
+        @Override
+        public void onFinish() {
+            view.stopProgress();
+        }
+
+    }
+
+    /**
+     * 回调json转换实现
+     * @param <T>
+     */
+    protected abstract class ConvertCallBack<T> extends SimpleCallBack {
+        @Override
+        public void onResponse(String response) {
+            super.onResponse(response);
+            Type genType = getClass().getGenericSuperclass();
+            Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
+            T result = DevelopConfig.getInstance().getJsonFactory().fromJson(response, params[0]);
+            onResponse(result);
+        }
+        public abstract void onResponse(T result);
     }
 }

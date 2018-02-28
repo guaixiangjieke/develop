@@ -42,12 +42,12 @@ public interface MvpContract {
 
         Activity getActivity();
 
-        void showToast(String text);
+        void showToast(@StringRes int resId);
 
         /**
          * 开始进度提示
          */
-        void startProgress(String text);
+        void startProgress(@StringRes int resId);
 
         /**
          * 停止进度提示
@@ -60,5 +60,10 @@ public interface MvpContract {
          * 获取父层控制器
          */
         IPresenter getParent();
+
+        /**
+         * 取消请求
+         */
+        void cancelRequest();
     }
 }

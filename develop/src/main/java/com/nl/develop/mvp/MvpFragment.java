@@ -2,6 +2,7 @@ package com.nl.develop.mvp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.nl.develop.widgets.LoadingDialog;
 
 import java.lang.reflect.Method;
 
@@ -129,19 +133,44 @@ public class MvpFragment<P extends MvpContract.IPresenter> extends Fragment impl
     }
 
     @Override
-    public void showToast(String text) {
-        invokeMvpActivity("showToast", new Class[]{String.class}, new Object[]{text});
+    public void showToast(int resId) {
+        Toast.makeText(getActivity(), getString(resId), Toast.LENGTH_SHORT).show();
     }
 
+    private LoadingDialog loadingDialog;
+
     @Override
-    public void startProgress(String text) {
-        invokeMvpActivity("startProgress", new Class[]{String.class}, new Object[]{text});
+    public void startProgress(int resId) {
+        if (!invokeMvpActivity("startProgress", new Class[]{int.class}, new Object[]{resId})) {
+            if (loadingDialog == null) {
+                loadingDialog = new LoadingDialog(getActivity());
+                loadingDialog.setOnCancelListener(onCancelListener);
+            }
+
+            if (loadingDialog != null && isVisible() && !loadingDialog.isShowing()) {
+                loadingDialog.show(getString(resId));
+            }
+        }
     }
 
     @Override
     public void stopProgress() {
-        invokeMvpActivity("stopProgress", null, null);
+        if (!invokeMvpActivity("stopProgress", null, null)) {
+            if (loadingDialog != null && !isVisible()) {
+                loadingDialog.dismiss();
+            }
+        }
     }
+
+    /**
+     * loading取消事件
+     */
+    DialogInterface.OnCancelListener onCancelListener = new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            presenter.cancelRequest();
+        }
+    };
 
     /**
      * 反射调用对应activity方法
@@ -150,7 +179,7 @@ public class MvpFragment<P extends MvpContract.IPresenter> extends Fragment impl
      * @param parameterTypes
      * @param objects
      */
-    private void invokeMvpActivity(String name, Class<?>[] parameterTypes, Object[] objects) {
+    private boolean invokeMvpActivity(String name, Class<?>[] parameterTypes, Object[] objects) {
         Activity activity = getActivity();
         if (activity != null && activity instanceof MvpActivity) {
             Class<MvpActivity> mvpActivityClass = MvpActivity.class;
@@ -158,9 +187,11 @@ public class MvpFragment<P extends MvpContract.IPresenter> extends Fragment impl
                 Method declaredMethod = mvpActivityClass.getDeclaredMethod(name, parameterTypes);
                 declaredMethod.setAccessible(true);
                 declaredMethod.invoke(activity, objects);
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return false;
     }
 }

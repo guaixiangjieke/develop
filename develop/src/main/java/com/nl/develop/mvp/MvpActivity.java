@@ -2,12 +2,15 @@ package com.nl.develop.mvp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import com.nl.develop.widgets.LoadingDialog;
 
 /**
  * Created by NiuLei on 2018/1/29.
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 public class MvpActivity<P extends MvpContract.IPresenter> extends AppCompatActivity implements MvpContract.IView<P> {
     protected P presenter;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,10 +27,26 @@ public class MvpActivity<P extends MvpContract.IPresenter> extends AppCompatActi
         if (presenter != null) {
             presenter.onCreate(savedInstanceState);
         }
+
     }
+
+    /**
+     * loading取消事件
+     */
+    DialogInterface.OnCancelListener onCancelListener = new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            presenter.cancelRequest();
+        }
+    };
 
     @Override
     protected void onDestroy() {
+        if (loadingDialog != null) {
+            loadingDialog.setOnCancelListener(null);
+            loadingDialog.dismiss();
+        }
+
         super.onDestroy();
         if (presenter != null) {
             presenter.onDestroy();
@@ -121,17 +141,27 @@ public class MvpActivity<P extends MvpContract.IPresenter> extends AppCompatActi
     }
 
     @Override
-    public void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    public void showToast(int resId) {
+        Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void startProgress(String text) {
+    public void startProgress(int resId) {
+        if (loadingDialog == null) {
+            loadingDialog = new LoadingDialog(this);
+            loadingDialog.setOnCancelListener(onCancelListener);
+        }
 
+        if (loadingDialog != null && !isFinishing() && !loadingDialog.isShowing()) {
+            loadingDialog.show(getString(resId));
+        }
     }
+
 
     @Override
     public void stopProgress() {
-
+        if (loadingDialog != null && !isFinishing()) {
+            loadingDialog.dismiss();
+        }
     }
 }

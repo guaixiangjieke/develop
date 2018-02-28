@@ -4,7 +4,7 @@ apply plugin: 'maven'
 uploadArchives {
     repositories {
         mavenDeployer {
-            String path = "file:///Users/ex-niulei002/Desktop/project/LookInto/repository"
+            String path = "file:///Users/ex-niulei002/Desktop/project/LookIntoSimple/repository"
 //            String path = "file://" + getProjectDir().absolutePath + File.separator + "repository"
             repository(url: path)
             pom.version = '0.1.0'
