@@ -15,7 +15,7 @@ import static com.nl.develop.BuildConfig.TAG;
 
 public class LogTools {
     public static void log(int level, String msg) {
-        if (!DevelopConfig.getInstance().isDebug()) {
+        if (DevelopConfig.getInstance() != null && !DevelopConfig.getInstance().isDebug()) {
             //log开关
             return;
         }
