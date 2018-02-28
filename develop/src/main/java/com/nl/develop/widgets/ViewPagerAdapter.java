@@ -38,4 +38,16 @@ public class ViewPagerAdapter extends android.support.v4.view.PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView(views.get(position));
     }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        if (views != null && !views.isEmpty() && position >= 0 && position < views.size()) {
+            View view = views.get(position);
+            if (view != null && view.getTag() != null) {
+                Object tag = view.getTag();
+                return tag.toString();
+            }
+        }
+        return super.getPageTitle(position);
+    }
 }
