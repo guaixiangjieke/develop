@@ -12,7 +12,6 @@ import com.nl.develop.R;
 import com.nl.develop.net.NetCallBack;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
@@ -150,17 +149,18 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
 
     /**
      * 回调json转换实现
+     *
      * @param <T>
      */
     protected abstract class ConvertCallBack<T> extends SimpleCallBack {
         @Override
         public void onResponse(String response) {
             super.onResponse(response);
-            Type genType = getClass().getGenericSuperclass();
-            Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
-            T result = DevelopConfig.getInstance().getJsonFactory().fromJson(response, params[0]);
+            Type type = com.nl.develop.utils.TypeToken.getSuperclassTypeParameter(getClass());
+            T result = DevelopConfig.getInstance().getJsonFactory().fromJson(response, type);
             onResponse(result);
         }
+
         public abstract void onResponse(T result);
     }
 }
