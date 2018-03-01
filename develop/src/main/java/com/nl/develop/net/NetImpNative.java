@@ -1,7 +1,5 @@
 package com.nl.develop.net;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
@@ -14,9 +12,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+
+import static com.nl.develop.utils.Tools.THREAD_POOL_EXECUTOR;
 
 /**
  * Created by NiuLei on 2018/1/30.
@@ -27,27 +24,16 @@ import java.util.concurrent.TimeUnit;
  * 响应时候 头信息 url 等等信息
  */
 
-public class NetImpNative implements NetFactory {
-    private final Handler handler = new Handler(Looper.getMainLooper());
+public class NetImpNative extends BasicNetFactory {
     class Method {
         public static final String POST = "POST";
         public static final String GET = "GET";
     }
 
     /**
-     * 最大线程数量
-     */
-    private static final int MAX_NUM_THREADS = 5;
-    /**
      * 编码
      */
     private static final String CHARSET_NAME = "UTF-8";
-    /**
-     * 线程池
-     */
-    private static final ThreadPoolExecutor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(MAX_NUM_THREADS, MAX_NUM_THREADS,
-            0L, TimeUnit.MILLISECONDS,
-            new LinkedBlockingQueue<Runnable>(MAX_NUM_THREADS * 2));
 
     /**
      * 默认
@@ -87,7 +73,6 @@ public class NetImpNative implements NetFactory {
         return exe(url, Method.GET, params, netCallBack);
     }
 
-
     /**
      * 嵌套线程请求
      *
@@ -101,7 +86,7 @@ public class NetImpNative implements NetFactory {
             final Future<?> submit = THREAD_POOL_EXECUTOR.submit(new Runnable() {
                 @Override
                 public void run() {
-                    request(url, method, params, NetCallBackHandler.newProxy(handler,netCallBack));
+                    request(url, method, params, newProxy(netCallBack));
                 }
             });
             return new RequestFutureAdapter(submit);
