@@ -156,7 +156,7 @@ public class MvpFragment<P extends MvpContract.IPresenter> extends Fragment impl
     @Override
     public void stopProgress() {
         if (!invokeMvpActivity("stopProgress", null, null)) {
-            if (loadingDialog != null && !isVisible()) {
+            if (loadingDialog != null) {
                 loadingDialog.dismiss();
             }
         }
