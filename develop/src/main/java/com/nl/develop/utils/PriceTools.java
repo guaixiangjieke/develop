@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 
 /**
  * Created by NiuLei on 2018/1/30.
+ * 价格工具类
  */
 
 public class PriceTools {
@@ -17,7 +18,7 @@ public class PriceTools {
      * @param price
      * @return
      */
-    public static String formatPrice(float price) {
+    public static String formatPrice(double price) {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         return decimalFormat.format(price);
     }
@@ -28,12 +29,12 @@ public class PriceTools {
      * @param price
      * @return
      */
-    public static float formatPrice(String price) {
+    public static double formatPrice(String price) {
         try {
-            return Float.parseFloat(price);
+            return Double.parseDouble(price);
         } catch (Exception ignored) {
         }
-        return 0.0f;
+        return 0.0d;
     }
 
     //价钱小数点后两位限制
