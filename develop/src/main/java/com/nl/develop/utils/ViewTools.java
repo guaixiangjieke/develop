@@ -1,6 +1,10 @@
 package com.nl.develop.utils;
 
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -28,6 +32,7 @@ public class ViewTools {
 
     /**
      * 绘制视图树时执行 任务
+     *
      * @param view
      * @param runnable
      */
@@ -42,4 +47,20 @@ public class ViewTools {
             }
         });
     }
+
+    /**
+     * 设置背景
+     *
+     * @param view 视图
+     * @param id   资源id
+     */
+    public void setBackground(@NonNull View view, @DrawableRes int id) {
+        final Drawable drawable = ContextCompat.getDrawable(view.getContext(), id);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackground(drawable);
+        } else {
+            view.setBackgroundDrawable(drawable);
+        }
+    }
+
 }
