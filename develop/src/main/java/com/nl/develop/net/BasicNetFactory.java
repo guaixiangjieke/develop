@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 
 public abstract class BasicNetFactory implements NetFactory {
     private final Handler handler = new Handler(Looper.getMainLooper());
+    protected OnRequestListener onRequestListener;
 
     /**
      * Created by NiuLei on 2018/2/26.
@@ -86,5 +87,10 @@ public abstract class BasicNetFactory implements NetFactory {
             }
         });
 
+    }
+
+    @Override
+    public void setOnRequestListener(OnRequestListener onRequestListener) {
+        this.onRequestListener = onRequestListener;
     }
 }

@@ -39,10 +39,22 @@ public interface NetFactory {
 
     /**
      * 模拟网络请求
+     *
      * @param netCallBack 网络回调
-     * @param callable 模拟操作
+     * @param callable    模拟操作
      * @param
      */
     void test(@NonNull NetCallBack netCallBack, Callable<String> callable);
+
+    /**
+     * 设置请求监听  添加请求头
+     *
+     * @param onRequestListener
+     */
+    void setOnRequestListener(OnRequestListener onRequestListener);
+
+    interface OnRequestListener {
+        ArrayMap<String, String> requestWithHeads();
+    }
 
 }

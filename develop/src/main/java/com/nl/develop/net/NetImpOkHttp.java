@@ -3,14 +3,23 @@ package com.nl.develop.net;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
-import com.nl.develop.BuildConfig;
 import com.nl.develop.utils.HttpTools;
 
 import java.io.IOException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -27,11 +36,32 @@ public class NetImpOkHttp extends BasicNetFactory {
 
     public NetImpOkHttp() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(httpLoggingInterceptor);
-        }
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        /*拦截器添加请求头*/
+        builder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                final Request.Builder builder = chain.request().newBuilder();
+                if (onRequestListener != null) {
+                    ArrayMap<String, String> stringStringArrayMap = onRequestListener.requestWithHeads();
+                    if (stringStringArrayMap != null && !stringStringArrayMap.isEmpty()) {
+                        for (int i = 0; i < stringStringArrayMap.size(); i++) {
+                            builder.addHeader(stringStringArrayMap.keyAt(i), stringStringArrayMap.valueAt(i));
+                        }
+                    }
+                }
+                final Request request = builder.build();
+                return chain.proceed(request);
+            }
+        });
+        builder.addInterceptor(httpLoggingInterceptor);
+        builder.hostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        });
         okHttpClient = builder.build();
     }
 

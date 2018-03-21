@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.nl.develop.DevelopConfig;
 import com.nl.develop.net.NetCallBack;
 import com.nl.develop.net.NetFactory;
+import com.nl.develop.utils.LogTools;
 
 import java.util.concurrent.Callable;
 
@@ -19,10 +20,20 @@ public class MvpModel implements MvpContract.IModel {
     }
 
     protected NetFactory getNetFactory() {
-        return DevelopConfig.getInstance().getNetFactory();
+        DevelopConfig instance = DevelopConfig.getInstance();
+        if (instance != null) {
+            return instance.getNetFactory();
+        }
+        return null;
     }
 
     protected void test(@NonNull NetCallBack netCallBack, @NonNull Callable<String> callable) {
-        getNetFactory().test(netCallBack, callable);
+        NetFactory netFactory = getNetFactory();
+        if (netFactory != null) {
+            netFactory.test(netCallBack, callable);
+        } else {
+            LogTools.e("test: netFactory == null");
+        }
+
     }
 }

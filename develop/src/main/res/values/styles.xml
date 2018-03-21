@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BottomUpAnimation">
+        <item name="android:windowEnterAnimation">@anim/bottom_up_in</item>
+        <item name="android:windowExitAnimation">@anim/bottom_up_out</item>
+    </style>
+</resources>
