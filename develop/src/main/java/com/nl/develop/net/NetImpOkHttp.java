@@ -3,6 +3,8 @@ package com.nl.develop.net;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
+import com.nl.develop.DevelopConfig;
+import com.nl.develop.json.JsonFactory;
 import com.nl.develop.utils.HttpTools;
 
 import java.io.IOException;
@@ -20,8 +22,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -75,6 +79,20 @@ public class NetImpOkHttp extends BasicNetFactory {
             }
         }
         final Request request = generateRequestBuilder(url).post(builder.build()).build();
+        return exe(netCallBack, request);
+    }
+
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+    @Override
+    public IRequest post(@NonNull String url, @NonNull Object obj, @NonNull NetCallBack netCallBack) {
+        final JsonFactory jsonFactory = DevelopConfig.getInstance().getJsonFactory();
+        String content = "";
+        if (jsonFactory != null) {
+            content = jsonFactory.toJson(obj);
+        }
+        RequestBody requestBody = RequestBody.create(JSON, content);
+        final Request request = generateRequestBuilder(url).post(requestBody).build();
         return exe(netCallBack, request);
     }
 

@@ -64,6 +64,11 @@ public abstract class BasicNetFactory implements NetFactory {
     }
 
     @Override
+    public IRequest post(@NonNull String url, Object obj, @NonNull NetCallBack netCallBack) {
+        return null;
+    }
+
+    @Override
     public void test(@NonNull NetCallBack netCallBack, final Callable<String> callable) {
         final NetCallBack netCallBack1 = newProxy(netCallBack);
         Tools.THREAD_POOL_EXECUTOR.submit(new Runnable() {

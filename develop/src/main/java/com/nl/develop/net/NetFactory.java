@@ -21,6 +21,16 @@ public interface NetFactory {
     IRequest post(@NonNull String url, ArrayMap<String, String> params, @NonNull NetCallBack netCallBack);
 
     /**
+     * post请求
+     *
+     * @param url
+     * @param obj         obj参数  json
+     * @param netCallBack
+     * @return
+     */
+    IRequest post(@NonNull String url, Object obj, @NonNull NetCallBack netCallBack);
+
+    /**
      * get请求
      *
      * @param url         路径
