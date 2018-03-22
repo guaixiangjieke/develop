@@ -1,18 +1,16 @@
 package com.nl.develop.mvp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.nl.develop.utils.ViewTools;
 import com.nl.develop.widgets.LoadingDialog;
 
 import java.lang.reflect.Method;
@@ -24,34 +22,16 @@ import java.lang.reflect.Method;
 public class MvpFragment<P extends MvpContract.IPresenter> extends Fragment implements MvpContract.IView<P> {
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        ViewTools.onPreDrawOfView(view, new Runnable() {
+            @Override
+            public void run() {
+                if (presenter != null) {
+                    presenter.onUiVisible();
+                }
+            }
+        });
     }
 
 

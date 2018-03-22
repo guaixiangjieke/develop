@@ -20,6 +20,7 @@ import com.nl.develop.widgets.LoadingDialog;
 public class MvpActivity<P extends MvpContract.IPresenter> extends AppCompatActivity implements MvpContract.IView<P> {
     protected P presenter;
     private LoadingDialog loadingDialog;
+    private boolean isFirst;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,8 +89,11 @@ public class MvpActivity<P extends MvpContract.IPresenter> extends AppCompatActi
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (presenter != null) {
-            presenter.onWindowFocusChanged(hasFocus);
+        if (hasFocus && !isFirst) {
+            isFirst = true;
+            if (presenter != null) {
+                presenter.onUiVisible();
+            }
         }
     }
 

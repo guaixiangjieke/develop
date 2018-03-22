@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import com.nl.develop.DevelopConfig;
 import com.nl.develop.R;
 import com.nl.develop.net.NetCallBack;
-import com.nl.develop.utils.LogTools;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -31,6 +30,11 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onUiVisible() {
 
     }
 
@@ -56,11 +60,6 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
 
     @Override
     public void onPause() {
-
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
 
     }
 

@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 public interface ViewCallback {
     void onCreate(@Nullable Bundle savedInstanceState);
 
+    void onUiVisible();
+
     void onDestroy();
 
     void onStart();
@@ -21,8 +23,6 @@ public interface ViewCallback {
     void onResume();
 
     void onPause();
-
-    void onWindowFocusChanged(boolean hasFocus);
 
     boolean onBackPressed();
 
