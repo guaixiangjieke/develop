@@ -53,6 +53,12 @@ public interface MvpContract {
          * 停止进度提示
          */
         void stopProgress();
+
+        /**
+         * 运行到主线程
+         * @param action
+         */
+        void runOnUiThread(Runnable action);
     }
 
     interface IPresenter extends ViewCallback {

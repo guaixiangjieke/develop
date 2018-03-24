@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -139,6 +140,14 @@ public class MvpFragment<P extends MvpContract.IPresenter> extends Fragment impl
             if (loadingDialog != null) {
                 loadingDialog.dismiss();
             }
+        }
+    }
+
+    @Override
+    public void runOnUiThread(Runnable action) {
+        final FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(action);
         }
     }
 
