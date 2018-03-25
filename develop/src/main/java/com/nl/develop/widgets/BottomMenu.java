@@ -13,9 +13,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.nl.develop.R;
+import com.nl.develop.widgets.recycler.DividerDecoration;
 import com.nl.develop.widgets.recycler.OnItemPressListener;
-import com.nl.develop.widgets.recycler.RecyclerAdapter;
-import com.nl.develop.widgets.recycler.SimpleRecyclerAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -25,19 +24,19 @@ import java.util.List;
  * 底部弹框
  */
 
-public class BottomMenu extends PopupWindow {
+public class BottomMenu<T> extends PopupWindow {
     private final int height;
     private final View parent;
-    private RecyclerAdapter<String> recyclerAdapter;
+    private BottomAdapter<T> recyclerAdapter;
     private final WeakReference<Activity> activityRef;
     private RecyclerView recyclerView;
-    private final List<String> data;
+    private final List<T> data;
     private OnBottomMenuListener onBottomMenuListener;
 
     /**
      * 菜单监听
      */
-    public interface OnBottomMenuListener {
+    public interface OnBottomMenuListener<T> {
         /**
          * 子项点击监听
          *
@@ -45,10 +44,10 @@ public class BottomMenu extends PopupWindow {
          * @param item
          * @param position
          */
-        void onBottomMenuItemClick(BottomMenu bottomMenu, String item, int position);
+        void onBottomMenuItemClick(BottomMenu bottomMenu, T item, int position);
     }
 
-    public BottomMenu(Activity context, List<String> data, int height, OnBottomMenuListener onBottomMenuListener) {
+    public BottomMenu(Activity context, List<T> data, int height, OnBottomMenuListener<T> onBottomMenuListener) {
         super(context);
         this.data = data;
         this.height = height;
@@ -66,9 +65,10 @@ public class BottomMenu extends PopupWindow {
         //初始化列表
         recyclerView = new RecyclerView(context);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerAdapter = new SimpleRecyclerAdapter<>(context, data);
+        recyclerAdapter = new BottomAdapter(context, data);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.addOnItemTouchListener(onItemPressListener);
+        recyclerView.addItemDecoration(new DividerDecoration(Color.parseColor("#dbdbdb"), 1));
         setContentView(recyclerView);
         setOutsideTouchable(true);
         setFocusable(true);
