@@ -25,13 +25,14 @@ import java.util.List;
  */
 
 public class BottomMenu<T> extends PopupWindow {
-    private final int height;
+    private final int maxHeight;
     private final View parent;
     private BottomAdapter<T> recyclerAdapter;
     private final WeakReference<Activity> activityRef;
     private RecyclerView recyclerView;
     private final List<T> data;
     private OnBottomMenuListener onBottomMenuListener;
+    private int measuredHeight = 0;
 
     /**
      * 菜单监听
@@ -47,10 +48,10 @@ public class BottomMenu<T> extends PopupWindow {
         void onBottomMenuItemClick(BottomMenu bottomMenu, T item, int position);
     }
 
-    public BottomMenu(Activity context, List<T> data, int height, OnBottomMenuListener<T> onBottomMenuListener) {
+    public BottomMenu(Activity context, List<T> data, int maxHeight, OnBottomMenuListener<T> onBottomMenuListener) {
         super(context);
         this.data = data;
-        this.height = height;
+        this.maxHeight = maxHeight;
         this.activityRef = new WeakReference<>(context);
         this.onBottomMenuListener = onBottomMenuListener;
         parent = context.getWindow().getDecorView();
@@ -60,7 +61,6 @@ public class BottomMenu<T> extends PopupWindow {
     private void init(Context context) {
         setBackgroundDrawable(null);
         setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);
-        setHeight(height);
         setAnimationStyle(R.style.BottomUpAnimation);
         //初始化列表
         recyclerView = new RecyclerView(context);
@@ -99,6 +99,19 @@ public class BottomMenu<T> extends PopupWindow {
             WindowManager.LayoutParams attributes = activity.getWindow().getAttributes();
             attributes.alpha = 0.2f;
             activity.getWindow().setAttributes(attributes);
+        }
+        if (measuredHeight == 0) {
+            int width = View.MeasureSpec.makeMeasureSpec(0,
+                    View.MeasureSpec.UNSPECIFIED);
+            int height = View.MeasureSpec.makeMeasureSpec(0,
+                    View.MeasureSpec.UNSPECIFIED);
+            View contentView = getContentView();
+            contentView.measure(width, height);
+            measuredHeight = contentView.getMeasuredHeight();
+        }
+
+        if (maxHeight < measuredHeight) {
+            setHeight(maxHeight);
         }
         showAtLocation(parent, Gravity.BOTTOM, 0, 0);
     }
