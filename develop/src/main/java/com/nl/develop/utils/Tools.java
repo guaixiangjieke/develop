@@ -64,11 +64,17 @@ public class Tools {
 
     /**
      * 手机号正则
-     */
-    //     移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
-//     联通：130、131、132、152、155、156、185、186
-//     电信：133、153、180、189、（1349卫通）
-    public static final Pattern phonePattern = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+     * 运营商号段如下：
+     * 中国联通号码：130、131、132、145（无线上网卡）、155、156、185（iPhone5上市后开放）、186、176（4G号段）、
+     *               175（2015年9月10日正式启用，暂只对北京、上海和广东投放办理）
+     * 中国移动号码：134、135、136、137、138、139、147（无线上网卡）、150、151、152、157、158、159、182、183、187、188、178
+     * 中国电信号码：133、153、180、181、189、177、173、149 虚拟运营商：170、1718、1719
+     * 手机号前3位的数字包括：
+     * 1 :1
+     * 2 :3,4,5,7,8
+     * 3 :0,1,2,3,4,5,6,7,8,9
+     * **/
+    public static final Pattern phonePattern = Pattern.compile("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0,5-9]))\\d{8}$");
 
     /**
      * 验证是否为手机号码格式
@@ -77,6 +83,12 @@ public class Tools {
      * @return
      */
     public static boolean isPhoneFomart(String PhoneNo) {
+        if (PhoneNo == null) {
+            return false;
+        }
+        if (PhoneNo.length() != 11) {
+            return false;
+        }
         Matcher m = phonePattern.matcher(PhoneNo);
         return m == null ? false : m.matches();
 
