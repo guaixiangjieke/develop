@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Develop</string>
     <string name="net_loading">网络加载中...</string>
+    <string name="net_canceled">网络请求取消</string>
+    <string name="net_timeout">网络连接超时</string>
+    <string name="net_failure">网络请求失败,请检查网络</string>
 </resources>

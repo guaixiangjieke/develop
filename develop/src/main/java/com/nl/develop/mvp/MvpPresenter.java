@@ -127,9 +127,11 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
             String message = e.getMessage();
             if (message != null) {
                 if (message.toLowerCase().indexOf("Canceled".toLowerCase()) != -1) {
+                    view.showToast(R.string.net_canceled);
                 } else if (message.toLowerCase().indexOf("TimeOut".toLowerCase()) != -1) {
-                } else if (message.toLowerCase().indexOf("Socket closed".toLowerCase()) != -1) {
+                    view.showToast(R.string.net_timeout);
                 } else {
+                    view.showToast(R.string.net_failure);
                 }
             }
         }
