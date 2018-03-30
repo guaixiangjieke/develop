@@ -146,7 +146,12 @@ public class MvpActivity<P extends MvpContract.IPresenter> extends AppCompatActi
 
     @Override
     public void showToast(int resId) {
-        Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show();
+        showToast(getString(resId));
+    }
+
+    @Override
+    public void showToast(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
     @Override

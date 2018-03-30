@@ -116,6 +116,12 @@ public class MvpFragment<P extends MvpContract.IPresenter> extends Fragment impl
     @Override
     public void showToast(int resId) {
         Toast.makeText(getActivity(), getString(resId), Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void showToast(String text) {
+        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
     }
 
     private LoadingDialog loadingDialog;

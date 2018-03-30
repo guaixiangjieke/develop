@@ -44,6 +44,8 @@ public interface MvpContract {
 
         void showToast(@StringRes int resId);
 
+        void showToast(String text);
+
         /**
          * 开始进度提示
          */

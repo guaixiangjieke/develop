@@ -141,12 +141,17 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
             if (successMsg > 0) {
                 view.showToast(successMsg);
             }
+            onPresenterResponse(response);
         }
 
         @Override
         public void onFinish() {
             view.stopProgress();
         }
+
+    }
+
+    protected void onPresenterResponse(String response) {
 
     }
 
@@ -161,9 +166,14 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
             super.onResponse(response);
             Type type = com.nl.develop.utils.TypeToken.getSuperclassTypeParameter(getClass());
             T result = DevelopConfig.getInstance().getJsonFactory().fromJson(response, type);
+            onPresenterResponse(result);
             onResponse(result);
         }
 
         public abstract void onResponse(T result);
+    }
+
+    protected  <T> void onPresenterResponse(T result) {
+
     }
 }
