@@ -1,7 +1,13 @@
 package com.nl.develop.utils;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
@@ -96,6 +102,36 @@ public class FileTools {
                     src.delete();
                 }
             }
+        }
+        return false;
+    }
+
+    /**
+     * 根据uri复制 到指定目录
+     * @param context
+     * @param uri
+     * @param targetPath
+     * @return
+     */
+    public static boolean copyTo(Context context, Uri uri, String targetPath) {
+        FileChannel inChannel = null;
+        FileChannel outChannel = null;
+        try {
+            final ContentResolver contentResolver = context.getContentResolver();
+            ParcelFileDescriptor descriptor = contentResolver.openFileDescriptor(uri, "r");
+            File file = new File(targetPath);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            inChannel = new FileInputStream(descriptor.getFileDescriptor()).getChannel();
+            outChannel = new FileOutputStream(file).getChannel();
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            CloseTools.release(inChannel);
+            CloseTools.release(outChannel);
         }
         return false;
     }
