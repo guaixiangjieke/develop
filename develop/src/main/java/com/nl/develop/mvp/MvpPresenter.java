@@ -2,23 +2,29 @@ package com.nl.develop.mvp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import com.nl.develop.DevelopConfig;
 import com.nl.develop.R;
 import com.nl.develop.net.NetCallBack;
+import com.nl.develop.utils.LogTools;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by NiuLei on 2018/1/29.
  */
 
 public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IView> implements MvpContract.IPresenter {
+    private static final int PERMISSION_REQUEST_CODE = 102;
     protected M model;
     protected V view;
 
@@ -55,7 +61,32 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
 
     @Override
     public void onResume() {
+        checkNeedPermissions();
+    }
 
+    /**
+     * 检查所需权限
+     */
+    private void checkNeedPermissions() {
+        String permissions[] = getNeedPermissions();
+        if (permissions != null && permissions.length > 0) {
+            for (int i = 0; i < permissions.length; i++) {
+                String needPermission = permissions[i];
+                List<String> deniedPermissions = new ArrayList<>();
+                //收集没有获得的权限
+                if (PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(view.getActivity(), needPermission)) {
+                    deniedPermissions.add(needPermission);
+                }
+                int size = deniedPermissions.size();
+                if (size > 0) {//请求权限
+                    ActivityCompat.requestPermissions(view.getActivity(), deniedPermissions.toArray(new String[size]), PERMISSION_REQUEST_CODE);
+                }
+            }
+        }
+    }
+
+    protected String[] getNeedPermissions() {
+        return null;
     }
 
     @Override
@@ -70,7 +101,18 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (PERMISSION_REQUEST_CODE == requestCode) {
+            if (grantResults.length > 0) {
+                // 2017/12/25 未做其他处理
+                for (int i = 0; i < grantResults.length; i++) {
+                    int grantResult = grantResults[i];
+                    if (PackageManager.PERMISSION_DENIED == grantResult) {
+                        LogTools.w("onRequestPermissionsResult: "+permissions[i] + " PERMISSION_DENIED");
+                    }
+                }
+            }
 
+        }
     }
 
     @Override
@@ -173,7 +215,7 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
         public abstract void onResponse(T result);
     }
 
-    protected  <T> void onPresenterResponse(T result) {
+    protected <T> void onPresenterResponse(T result) {
 
     }
 }
