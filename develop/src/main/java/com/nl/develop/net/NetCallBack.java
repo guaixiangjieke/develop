@@ -32,4 +32,11 @@ public interface NetCallBack {
      */
     void onFinish();
 
+    /**
+     * 请求响应返回
+     *
+     * @param response
+     */
+    void onResponse(final String response, int code, String message);
+
 }

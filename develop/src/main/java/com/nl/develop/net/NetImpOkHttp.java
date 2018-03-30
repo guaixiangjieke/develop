@@ -185,6 +185,11 @@ public class NetImpOkHttp extends BasicNetFactory {
                 responseString = body.string();
             }
             try {
+                netCallBack.onResponse(responseString, response.code(), response.message());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
                 netCallBack.onResponse(responseString);
             } finally {
                 netCallBack.onFinish();

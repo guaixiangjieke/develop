@@ -191,6 +191,15 @@ public class MvpPresenter<M extends MvpContract.IModel, V extends MvpContract.IV
             view.stopProgress();
         }
 
+        @Override
+        public void onResponse(String response, int code, String message) {
+            onPresenterResponse(response,code,message);
+        }
+
+    }
+
+    protected void onPresenterResponse(String response, int code, String message) {
+
     }
 
     protected void onPresenterResponse(String response) {
