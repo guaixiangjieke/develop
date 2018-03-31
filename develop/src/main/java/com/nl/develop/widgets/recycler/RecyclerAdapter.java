@@ -60,7 +60,7 @@ public class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerViewHolder<
         return data == null ? 0 : data.size();
     }
 
-    protected T getItem(int position) {
+    public T getItem(int position) {
         return data == null ? null : data.get(position);
     }
 
