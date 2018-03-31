@@ -163,7 +163,9 @@ public class MvpFragment<P extends MvpContract.IPresenter> extends Fragment impl
     DialogInterface.OnCancelListener onCancelListener = new DialogInterface.OnCancelListener() {
         @Override
         public void onCancel(DialogInterface dialog) {
-            presenter.cancelRequest();
+            if (presenter != null) {
+                presenter.cancelRequest();
+            }
         }
     };
 

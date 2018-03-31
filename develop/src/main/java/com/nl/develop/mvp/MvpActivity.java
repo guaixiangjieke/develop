@@ -37,7 +37,9 @@ public class MvpActivity<P extends MvpContract.IPresenter> extends AppCompatActi
     DialogInterface.OnCancelListener onCancelListener = new DialogInterface.OnCancelListener() {
         @Override
         public void onCancel(DialogInterface dialog) {
-            presenter.cancelRequest();
+            if (presenter != null) {
+                presenter.cancelRequest();
+            }
         }
     };
 
