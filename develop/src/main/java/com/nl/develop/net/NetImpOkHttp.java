@@ -8,15 +8,9 @@ import com.nl.develop.json.JsonFactory;
 import com.nl.develop.utils.HttpTools;
 
 import java.io.IOException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,8 +34,6 @@ public class NetImpOkHttp extends BasicNetFactory {
 
     public NetImpOkHttp() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         /*拦截器添加请求头*/
         builder.addInterceptor(new Interceptor() {
             @Override
@@ -59,7 +51,15 @@ public class NetImpOkHttp extends BasicNetFactory {
                 return chain.proceed(request);
             }
         });
-        builder.addInterceptor(httpLoggingInterceptor);
+        final DevelopConfig instance = DevelopConfig.getInstance();
+        if (instance != null && instance.isDebug()) {
+                 /*包拦截器*/
+            builder.addInterceptor(new OkHttpInterceptor());
+            /*log拦截器*/
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(httpLoggingInterceptor);
+        }
         builder.hostnameVerifier(new HostnameVerifier() {
             @Override
             public boolean verify(String hostname, SSLSession session) {
