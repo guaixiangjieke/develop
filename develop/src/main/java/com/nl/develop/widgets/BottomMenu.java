@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import com.nl.develop.R;
 import com.nl.develop.widgets.recycler.DividerDecoration;
 import com.nl.develop.widgets.recycler.OnItemPressListener;
+import com.nl.develop.widgets.recycler.RecyclerAdapter;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -27,11 +28,11 @@ import java.util.List;
 public class BottomMenu<T> extends PopupWindow {
     private final int maxHeight;
     private final View parent;
-    private BottomAdapter<T> recyclerAdapter;
+    protected RecyclerAdapter<T> recyclerAdapter;
     private final WeakReference<Activity> activityRef;
-    private RecyclerView recyclerView;
-    private final List<T> data;
-    private OnBottomMenuListener onBottomMenuListener;
+    protected RecyclerView recyclerView;
+    protected final List<T> data;
+    protected OnBottomMenuListener onBottomMenuListener;
     private int measuredHeight = 0;
 
     /**
@@ -75,6 +76,14 @@ public class BottomMenu<T> extends PopupWindow {
         setBackgroundDrawable(new ColorDrawable(Color.WHITE));
     }
 
+    public void setData(List<T> data) {
+        if (this.data != null && data != null) {
+            this.data.clear();
+            this.data.addAll(data);
+        }
+        recyclerAdapter.notifyDataSetChanged();
+    }
+
     /**
      * item事件
      */
@@ -82,13 +91,17 @@ public class BottomMenu<T> extends PopupWindow {
         @Override
         public void onItemPressed(boolean longPress, RecyclerView recyclerView, RecyclerView.Adapter adapter, RecyclerView.ViewHolder viewHolder, int position) {
             if (!longPress) {
-                if (onBottomMenuListener != null) {
-                    onBottomMenuListener.onBottomMenuItemClick(BottomMenu.this, data.get(position), position);
-                }
-                dismiss();
+                BottomMenu.this.onItemPressed(position);
             }
         }
     };
+
+    protected void onItemPressed(int position) {
+        if (onBottomMenuListener != null) {
+            onBottomMenuListener.onBottomMenuItemClick(BottomMenu.this, data.get(position), position);
+        }
+        dismiss();
+    }
 
     /**
      * 以activity为依附 底部显示
