@@ -103,9 +103,13 @@ public class PriceTools {
                     if (source.equals(".")) {
                         return "0.";
                     }
+                } else {
+                    if (source.equals(".") && dstart == 0) {
+                        return "";
+                    }
                 }
                 if (destString.equals("0")) {
-                    if (source.length() >0 && !source.equals(".")) {
+                    if (source.length() >0 &&destString.length() == dstart && !source.equals(".")) {
                         return "."+source;
                     }
                 }
