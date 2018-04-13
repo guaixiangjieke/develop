@@ -100,8 +100,13 @@ public class PriceTools {
                 String destString = dest.toString();
                 //第一个字符输入 0或者. 默认显示为0.1
                 if (dest.length() == 0) {
-                    if (source.equals(".") || source.equals("0")) {
+                    if (source.equals(".")) {
                         return "0.";
+                    }
+                }
+                if (destString.equals("0")) {
+                    if (source.length() >0 && !source.equals(".")) {
+                        return "."+source;
                     }
                 }
                 //第一位插入0时 判断原有字符串第一位是否为小数点 如果不是返回""
