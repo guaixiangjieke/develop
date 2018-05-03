@@ -78,7 +78,13 @@ public class NetImpOkHttp extends BasicNetFactory {
                 builder.add(params.keyAt(i), params.valueAt(i));
             }
         }
-        final Request request = generateRequestBuilder(url).post(builder.build()).build();
+        Request request = null;
+        try {
+            request = generateRequestBuilder(url).post(builder.build()).build();
+        } catch (Exception e) {
+            netCallBack.onFailure(new IOException(e.getMessage()));
+            return null;
+        }
         return exe(netCallBack, request);
     }
 
@@ -92,13 +98,25 @@ public class NetImpOkHttp extends BasicNetFactory {
             content = jsonFactory.toJson(obj);
         }
         RequestBody requestBody = RequestBody.create(JSON, content);
-        final Request request = generateRequestBuilder(url).post(requestBody).build();
+        Request request = null;
+        try {
+            request = generateRequestBuilder(url).post(requestBody).build();
+        } catch (Exception e) {
+            netCallBack.onFailure(new IOException(e.getMessage()));
+            return null;
+        }
         return exe(netCallBack, request);
     }
 
     @Override
     public IRequest get(@NonNull String url, @NonNull NetCallBack netCallBack) {
-        final Request request = generateRequestBuilder(url).get().build();
+        Request request = null;
+        try {
+            request = generateRequestBuilder(url).get().build();
+        } catch (Exception e) {
+            netCallBack.onFailure(new IOException(e.getMessage()));
+            return null;
+        }
         return exe(netCallBack, request);
     }
 
@@ -107,7 +125,13 @@ public class NetImpOkHttp extends BasicNetFactory {
         if (params != null && !params.isEmpty()) {
             url += HttpTools.generatePath(params);
         }
-        final Request request = generateRequestBuilder(url).get().build();
+        Request request = null;
+        try {
+            request = generateRequestBuilder(url).get().build();
+        } catch (Exception e) {
+            netCallBack.onFailure(new IOException(e.getMessage()));
+            return null;
+        }
         return exe(netCallBack, request);
     }
 
@@ -132,9 +156,13 @@ public class NetImpOkHttp extends BasicNetFactory {
      * @param url 路径
      * @return Request.Builder对象
      */
-    private Request.Builder generateRequestBuilder(String url) {
+    private Request.Builder generateRequestBuilder(String url) throws Exception{
         final Request.Builder builder = new Request.Builder();
-        return builder.url(url);
+        try {
+            return builder.url(url);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     /**
