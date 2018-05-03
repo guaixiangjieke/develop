@@ -15,7 +15,12 @@ public class JsonImpGson implements JsonFactory {
 
     @Override
     public <T> T fromJson(String json, Class<T> classOfT) {
-        return gson.fromJson(json, classOfT);
+        try {
+            return gson.fromJson(json, classOfT);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
