@@ -74,6 +74,14 @@ public class Tools {
      * 3 :0,1,2,3,4,5,6,7,8,9
      **/
     public static final Pattern phonePattern = Pattern.compile("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0,5-9]))\\d{8}$");
+    /**
+     * 验证带区号的
+     */
+    public static final Pattern fixedPhonePatternRegion = Pattern.compile("^[0][1-9]{2,3}-[0-9]{5,10}$");
+    /**
+     * 验证没有区号的
+     */
+    public static final Pattern fixedPhonePattern = Pattern.compile("^[1-9]{1}[0-9]{5,8}$");
 
     /**
      * 验证是否为手机号码格式
@@ -92,4 +100,25 @@ public class Tools {
         return m == null ? false : m.matches();
 
     }
+
+    /**
+     * 验证是否为固定电话号码格式
+     *
+     * @param PhoneNo
+     * @return
+     */
+    public static boolean isFixedPhoneFomart(String PhoneNo) {
+        Matcher m = null;
+        boolean b = false;
+        if (PhoneNo.length() > 8) {
+            m = fixedPhonePatternRegion.matcher(PhoneNo);
+            b = m.matches();
+        } else {
+            m = fixedPhonePattern.matcher(PhoneNo);
+            b = m.matches();
+        }
+        return b;
+
+    }
+
 }
