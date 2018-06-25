@@ -84,7 +84,8 @@ public class ExpandableEditText extends AppCompatEditText {
      */
     public String getTextReal() {
         String text = getText().toString();
-        return TextUtils.isEmpty(text) ? getHint().toString() : text;
+        CharSequence hint = getHint();
+        return TextUtils.isEmpty(text) ? (TextUtils.isEmpty(hint) ? "" : hint.toString()) : text;
     }
 
     /**
