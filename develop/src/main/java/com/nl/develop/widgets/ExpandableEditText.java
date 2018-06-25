@@ -76,6 +76,7 @@ public class ExpandableEditText extends AppCompatEditText {
      */
     public void setMaxLinesReal(int maxLinesReal) {
         this.maxLinesReal = maxLinesReal;
+        setMaxLines(maxLinesReal);
     }
 
     /**
@@ -100,7 +101,7 @@ public class ExpandableEditText extends AppCompatEditText {
     /**
      * 是否展开
      */
-    private boolean isCollapsed() {
+    public boolean isCollapsed() {
         int maxLines = getMaxLines();
         return maxLines == maxLinesReal;
     }
@@ -113,7 +114,11 @@ public class ExpandableEditText extends AppCompatEditText {
         if (onExpandableEditTextListener != null) {
             onExpandableEditTextListener.onExpanded();
         }
-        String hintStr = getHint().toString();
+        CharSequence hint = getHint();
+        String hintStr = "";
+        if (hint != null) {
+            hintStr = hint.toString();
+        }
         setText(hintStr);
         setFocusable(true);
         setFocusableInTouchMode(true);
@@ -154,7 +159,6 @@ public class ExpandableEditText extends AppCompatEditText {
      */
     public void setTextReal(String textReal) {
         setText(textReal);
-        invalidate();
         lineCount = getLineCount();
         setMaxLines(maxLinesReal);
         updateOutOf(lineCount > maxLinesReal);
@@ -166,6 +170,7 @@ public class ExpandableEditText extends AppCompatEditText {
         } else {
             setFocusable(true);
             setFocusableInTouchMode(true);
+            addTextChangedListener(textWatcher);
         }
     }
 
@@ -186,7 +191,11 @@ public class ExpandableEditText extends AppCompatEditText {
         @Override
         public void afterTextChanged(Editable s) {
             lineCount = getLineCount();
+            setMaxLines(lineCount);
             updateOutOf(lineCount > maxLinesReal);
+            if (onExpandableEditTextListener != null) {
+                onExpandableEditTextListener.onExpanded();
+            }
         }
     };
 }
