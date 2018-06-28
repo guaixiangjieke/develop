@@ -30,38 +30,6 @@ public class Tools {
             new LinkedBlockingQueue<Runnable>(MAX_NUM_THREADS * 2));*/
 
     /**
-     * 点击输入框外部 隐藏输入法
-     *
-     * @param activity
-     * @param inputMethodManager
-     * @param ev
-     */
-    public static void hideSoftKeyboardOutsideOfFocus(Activity activity, InputMethodManager inputMethodManager, MotionEvent ev) {
-        if (activity == null) {
-            return;
-        }
-        if (inputMethodManager == null) {
-            return;
-        }
-        if (ev == null) {
-            return;
-        }
-        if (inputMethodManager.isActive()) {
-            final View currentFocus = activity.getCurrentFocus();
-            if (currentFocus != null) {
-                final IBinder windowToken = currentFocus.getWindowToken();
-                if (windowToken != null) {
-                    final Rect globalVisibleRect = new Rect();
-                    currentFocus.getGlobalVisibleRect(globalVisibleRect);
-                    if (!globalVisibleRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
-                        inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * 手机号正则
      * 运营商号段如下：
      * 中国联通号码：130、131、132、145（无线上网卡）、155、156、185（iPhone5上市后开放）、186、176（4G号段）、

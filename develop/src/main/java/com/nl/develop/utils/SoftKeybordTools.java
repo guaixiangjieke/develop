@@ -1,8 +1,11 @@
 package com.nl.develop.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.IBinder;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -52,7 +55,39 @@ public class SoftKeybordTools {
     }
 
     /**
+     * 点击输入框外部 隐藏输入法
      *
+     * @param activity
+     * @param inputMethodManager
+     * @param ev
+     */
+    public static void hideSoftKeyboardOutsideOfFocus(Activity activity, InputMethodManager inputMethodManager, MotionEvent ev) {
+        if (activity == null) {
+            return;
+        }
+        if (inputMethodManager == null) {
+            return;
+        }
+        if (ev == null) {
+            return;
+        }
+        if (inputMethodManager.isActive()) {
+            final View currentFocus = activity.getCurrentFocus();
+            if (currentFocus != null) {
+                final IBinder windowToken = currentFocus.getWindowToken();
+                if (windowToken != null) {
+                    final Rect globalVisibleRect = new Rect();
+                    currentFocus.getGlobalVisibleRect(globalVisibleRect);
+                    if (!globalVisibleRect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+                        inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     *软键盘事件
      */
     public static class ActionListener implements TextView.OnEditorActionListener {
         private int actionId;
