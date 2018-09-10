@@ -1,17 +1,26 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
+apply plugin: 'com.novoda.bintray-release'
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            String path = "file:///Users/ex-niulei002/Desktop/project/icore-cmss-android/EClaims/EClaims_new/repository"
-//            String path = "file://" + getProjectDir().absolutePath + File.separator + "repository"
-            repository(url: path)
-            pom.version = '0.1.0'
-            pom.groupId = 'com.nl.develop'
-            pom.artifactId = 'develop'
-        }
-    }
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+////            String path = "file:///Users/ex-niulei002/Desktop/project/icore-cmss-android/EClaims/EClaims_new/repository"
+////            String path = "file://" + getProjectDir().absolutePath + File.separator + "repository"
+//            repository(url: path)
+//            pom.version = '0.1.0'
+//            pom.groupId = 'com.nl.develop'
+//            pom.artifactId = 'develop'
+//        }
+//    }
+//}
+publish {
+    userOrg = 'guaixiangjieke'//bintray.com用户名
+    groupId = 'com.nl.develop'//jcenter上的路径
+    artifactId = 'develop'//项目名称
+    publishVersion = '0.1.1'//版本号
+    desc = '开发测试'//描述，不重要
+    website = 'https://github.com/guaixiangjieke/developSimple'//网站，最好有，不重要
 }
 android {
     compileSdkVersion 26
@@ -31,6 +40,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions{
+        abortOnError false
     }
     buildToolsVersion '26.0.2'
 }
