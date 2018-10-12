@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
-import com.nl.develop.net.OkHttpInterceptor;
+import com.nl.develop.utils.OkHttpInterceptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -103,7 +103,10 @@ public class ExpandableEditText extends AppCompatEditText {
      * 是否展开
      */
     public boolean isCollapsed() {
-        int maxLines = getMaxLines();
+        int maxLines = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            maxLines = getMaxLines();
+        }
         return maxLines == maxLinesReal;
     }
 
